@@ -1,16 +1,62 @@
 ---
 galaxy_info:
-  role_name: ""
+  role_name: casepro
   author: Ona Engineering
-  description: your role description
+  description: Install and configure CasePro
   company: Ona Systems Inc
   license: Apache-2.0
   min_ansible_version: 2.8
-  galaxy_tags: []
+  galaxy_tags:
+    - casepro
+    - rapidpro
   platforms:
     - name: Ubuntu
       versions:
-        - 16.04
         - 18.04
 
-dependencies: []
+dependencies:
+  - role: onaio.django
+    vars:
+      # user
+      django_system_user: "{{ casepro_system_user }}"
+      django_system_group: "{{ casepro_system_group }}"
+      django_system_user_home: "{{ casepro_system_user_home }}"
+
+      # git
+      django_git_url: "{{ casepro_git_url }}"
+      django_git_version: "{{ casepro_git_branch }}"
+
+      # system-wide dependencies
+      django_python_source_version: "{{ casepro_python_source_version }}"
+      django_python_version: "{{ casepro_python_version }}"
+      django_system_wide_dependencies: "{{ casepro_system_wide_dependencies }}"
+
+      # dir paths
+      django_codebase_path: "{{ casepro_codebase_path }}"
+      django_versioned_path: "{{ casepro_versioned_path }}"
+      django_checkout_path: "{{ casepro_checkout_path }}"
+      django_venv_path: "{{ casepro_venv_path }}"
+
+      # pip
+      django_pip_paths: "{{ casepro_pip_paths }}"
+
+      # service
+      django_service_name: "{{ casepro_service_name }}"
+      django_manage_services: true
+      django_environment_script_name: "{{ casepro_environment_script_name }}"
+
+      django_settings_template_path: "{{ casepro_django_settings_template_path }}"
+      django_local_settings_path: "{{ casepro_local_settings_path }}"
+      django_init_commands: []
+      django_static_path: "{{ casepro_django_static_path }}"
+      django_settings_module: "{{ casepro_django_settings_module }}"
+      django_wsgi_module: "{{ casepro_wsgi_module }}"
+      django_celery_app: "{{ casepro_celery_app }}"
+      django_celeryd_nodes: "{{ casepro_celeryd_nodes }}"
+      django_celeryd_opts: "{{ casepro_celeryd_opts }}"
+      django_celeryd_extra_env_vars: "{{ casepro_celeryd_extra_env_vars }}"
+      django_celerybeat_extra_env_vars: "{{ casepro_celerybeat_extra_env_vars }}"
+      django_environment_vars: "{{ casepro_environment_vars }}"
+      django_apt_python_ppa: "{{ casepro_apt_python_ppa }}"
+    tags:
+      - casepro
