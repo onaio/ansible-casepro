@@ -1,32 +1,72 @@
-Ansible Role [![Build Status](https://github.com/onaio/ansible-casepro/workflows/CI/badge.svg)](https://github.com/onaio/ansible-casepro/actions?query=workflow%3ACI)
+onaio - CasePro [![Build Status](https://github.com/onaio/ansible-casepro/workflows/CI/badge.svg)](https://github.com/onaio/ansible-casepro/actions?query=workflow%3ACI)
 =========
 
-A brief description of the role goes here.
+Installs and configures [CasePro](https://rapidpro.github.io/casepro).
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+CasePro has the following requirements:
+
+- PostgreSQL
+- Redis
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Check the [defaults/main.yml](./defaults/main.yml) file for the full list of default variables.
+
+```yml
+# git tag/branch to install
+casepro_git_branch: "v1.3.8"
+
+# domain for CasePro
+casepro_domain: casepro.example.com
+
+# secret key
+casepro_secret_key: "very-secret-key"
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+Here's the list of role dependencies:
+
+- [onaio.django](https://galaxy.ansible.com/onaio/django)
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+The following example playbook sets up CasePro, PostgreSQL and Redis:
 
 ```yml
-- hosts: servers
+- hosts: all
   roles:
-    - { role: username.rolename, x: 42 }
+    - role: onaio.postgresql
+      vars:
+        postgresql_version: 10
+        postgresql_users:
+          - name: casepro
+            pass: casepro
+            encrypted: true
+        postgresql_databases:
+          - name: casepro
+            owner: casepro
+            encoding: UTF-8
+            hstore: true
+        postgresql_database_extensions:
+          - db: casepro
+            extensions:
+              - hstore
+        postgresql_backup_enabled: false
+
+    - role: DavidWittman.redis
+      vars:
+        redis_version: "2.8.24"
+
+    - role: ansible-casepro
+      vars:
+        casepro_postgresql_password: casepro
 ```
 
 License
