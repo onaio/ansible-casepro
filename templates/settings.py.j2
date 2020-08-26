@@ -1,0 +1,52 @@
+# import our default settings
+from casepro.settings_common import *  # noqa
+
+ALLOWED_HOSTS = ['*']
+
+# INSTALLED_APPS = INSTALLED_APPS + ('debug_toolbar.apps.DebugToolbarConfig',)
+# MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+
+DEBUG = False
+
+ADMINS = (
+   ('Ona Ops', 'techops+{{ casepro_domain }}@ona.io'),
+)
+
+HOSTNAME = "{{ casepro_domain }}"
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": "{{ casepro_postgresql_database }}",
+        "USER": "{{ casepro_postgresql_user }}",
+        "PASSWORD": "{{ casepro_postgresql_password }}",
+        "HOST": "{{ casepro_postgresql_host }}",
+        "PORT": {{ casepro_postgresql_port }},
+        "ATOMIC_REQUESTS": True,
+        "OPTIONS": {},
+    }
+}
+
+# dash configuration
+SITE_API_HOST = "{{ casepro_site_api_host }}"
+SITE_HOST_PATTERN = "{{ casepro_site_host_pattern }}"
+
+# casepro configuration
+SITE_EXTERNAL_CONTACT_URL = "{{ casepro_site_external_contact_url }}"
+SITE_BACKEND = "{{ casepro_site_backend }}"
+
+# timezones
+USER_TIME_ZONE = "{{ casepro_user_time_zone }}"
+
+# secret key
+SECRET_KEY = "{{ casepro_secret_key }}"
+
+BROKER_URL = "{{casepro_broker_url }}"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": BROKER_URL,
+        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+    }
+}

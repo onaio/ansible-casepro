@@ -1,2 +1,68 @@
 ---
-# defaults file for role
+# user
+casepro_system_user: casepro
+casepro_system_group: www-data
+casepro_system_user_home: "/home/{{ casepro_system_user }}"
+
+# git
+casepro_git_url: "https://github.com/rapidpro/casepro.git"
+casepro_git_branch: "v1.3.8"
+
+# system-wide dependencies
+casepro_python_source_version: "3.6"
+casepro_python_version: "python{{ casepro_python_source_version }}"
+casepro_system_wide_dependencies:
+  - build-essential
+  - git
+  - node-less
+  - coffeescript
+  - postgresql-client
+
+# casepro paths
+casepro_codebase_path: "{{ casepro_system_user_home }}/app"
+casepro_versioned_path: "{{ casepro_codebase_path }}-versioned"
+casepro_checkout_path: "{{ casepro_versioned_path }}/{{ casepro_git_branch }}"
+casepro_venv_path: "{{ casepro_system_user_home }}/.virtualenvs/{{ casepro_system_user }}"
+
+# pip / python
+casepro_apt_python_ppa:
+casepro_pip_paths:
+  - "{{ casepro_checkout_path }}/pip-freeze.txt"
+
+# service
+casepro_service_name: "{{ casepro_system_user }}"
+casepro_environment_script_name: django.sh
+casepro_django_settings_module: casepro.settings
+casepro_environment_vars: []
+casepro_django_settings_template_path: "settings.py.j2"
+casepro_local_settings_path: "{{ casepro_checkout_path }}/casepro/settings.py"
+casepro_django_static_path: "{{ casepro_checkout_path }}/sitestatic"
+
+# casepro.settings
+casepro_domain:
+casepro_site_backend: "casepro.backend.rapidpro.RapidProBackend"
+casepro_site_api_host: http://localhost:8001/
+casepro_site_host_pattern: "http://%s.{{ casepro_domain }}"
+casepro_site_external_contact_url: "{{ casepro_site_api_host }}contact/read/%s/"
+casepro_user_time_zone:
+casepro_secret_key:
+
+# postgresql
+casepro_postgresql_database: casepro
+casepro_postgresql_user: casepro
+casepro_postgresql_password:
+casepro_postgresql_host: localhost
+casepro_postgresql_port: 5432
+
+# redis
+casepro_broker_url: redis://127.0.0.1:6379/15
+
+# wsgi
+casepro_wsgi_module: "casepro.wsgi:application"
+
+# celery
+casepro_celery_app: "casepro.celery:app"
+casepro_celeryd_nodes: "casepro.celery casepro.sync"
+casepro_celeryd_opts: "--loglevel=INFO -Q:casepro.celery celery -Q:casepro.sync sync"
+casepro_celeryd_extra_env_vars: []
+casepro_celerybeat_extra_env_vars: "{{ casepro_celeryd_extra_env_vars }}"
